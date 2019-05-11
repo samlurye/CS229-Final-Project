@@ -64,7 +64,7 @@ class Task:
         print('\nBest genome:\n{!s}'.format(winner))
         print("Modularity: {:.4f}".format(winner_mod))
 
-        file_stem = "Experiments/layered-fixedgoal/trial2"
+        file_stem = "Experiments/layered-mvg/trial" + input()
 
         node_names = {-(i+1): f"x{i}" for i in range(self.config.genome_config.num_inputs)}
         node_names.update({i: f"y{i}" for i in range(self.config.genome_config.num_outputs)})
@@ -122,7 +122,7 @@ if __name__ == "__main__":
     local_dir = os.path.dirname(__file__)
     config_path = os.path.join(local_dir, 'config-feedforward')
 
-    task = Task(config_path, [retina_and], 10000, 10000)
+    task = Task(config_path, [retina_and, retina_or], 50, 10000)
     task.run()
 
 
