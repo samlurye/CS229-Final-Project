@@ -60,8 +60,7 @@ class Task:
         print('\nBest genome:\n{!s}'.format(winner))
         print("Modularity: {:.4f}".format(winner_mod))
 
-        file_stem = "Experiments/layered-connectioncost/trial0"
-
+        file_stem = "Experiments/layered-connection-cost/trial" + input()
         node_names = {-(i+1): f"x{i}" for i in range(self.config.genome_config.num_inputs)}
         node_names.update({i: f"y{i}" for i in range(self.config.genome_config.num_outputs)})
         visualize.draw_net(self.config, winner, node_names=node_names, filename=file_stem+".gv")
