@@ -29,7 +29,7 @@ class Task:
 
     def eval_genomes(self, genomes, config):
         outputs = self.outputs[self.current_goal]
-        use_cc = random.random() < 0.
+        use_cc = random.random() < 0.25
         for genome_id, genome in genomes:
             genome.fitness = self.inputs.shape[1]
             net = neat.nn.FeedForwardNetwork.create(genome, config)
@@ -37,12 +37,8 @@ class Task:
             output = [np.round(o) for o in output]
             n_incorrect = np.sum(np.abs(output - outputs))
             genome.fitness -= n_incorrect
-            # if n_incorrect < 12:
-            #     genome.fitness = 256
-            # else:
-            #     genome.fitness -= n_incorrect
-            #     if use_cc:
-            #         genome.fitness -= sum([1 for cg in genome.connections.values() if cg.enabled])
+            if use_cc:
+                genome.fitness -= sum([1 for cg in genome.connections.values() if cg.enabled])
         self.ctr += 1
         if not self.ctr % self.goal_freq:
             self.current_goal += 1
@@ -64,8 +60,7 @@ class Task:
         print('\nBest genome:\n{!s}'.format(winner))
         print("Modularity: {:.4f}".format(winner_mod))
 
-        file_stem = "Experiments/layered-mvg/trial0"
-
+        file_stem = "Experiments/layered-connection-cost/trial" + input()
         node_names = {-(i+1): f"x{i}" for i in range(self.config.genome_config.num_inputs)}
         node_names.update({i: f"y{i}" for i in range(self.config.genome_config.num_outputs)})
         visualize.draw_net(self.config, winner, node_names=node_names, filename=file_stem+".gv")
