@@ -29,7 +29,7 @@ class Task:
 
     def eval_genomes(self, genomes, config):
         outputs = self.outputs[self.current_goal]
-        use_cc = random.random() < 0.25
+        use_cc = random.random() < 0.1
         for genome_id, genome in genomes:
             genome.fitness = self.inputs.shape[1]
             net = neat.nn.FeedForwardNetwork.create(genome, config)
@@ -60,7 +60,7 @@ class Task:
         print('\nBest genome:\n{!s}'.format(winner))
         print("Modularity: {:.4f}".format(winner_mod))
 
-        file_stem = "Experiments/layered-fixedgoal/trial4"
+        file_stem = "Experiments/layered-connectioncost/trial0"
 
         node_names = {-(i+1): f"x{i}" for i in range(self.config.genome_config.num_inputs)}
         node_names.update({i: f"y{i}" for i in range(self.config.genome_config.num_outputs)})
