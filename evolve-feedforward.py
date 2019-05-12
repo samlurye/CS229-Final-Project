@@ -4,6 +4,7 @@ import visualize
 import numpy as np
 import random
 import pickle
+import sys
 
 class Task:
 
@@ -29,7 +30,9 @@ class Task:
 
     def eval_genomes(self, genomes, config):
         outputs = self.outputs[self.current_goal]
-        use_cc = random.random() < 0.1
+        use_cc = False
+        if sys.argv[1] == "config-cc":
+            use_cc = random.random() < 0.1 
         for genome_id, genome in genomes:
             genome.fitness = self.inputs.shape[1]
             net = neat.nn.FeedForwardNetwork.create(genome, config)
@@ -60,7 +63,7 @@ class Task:
         print('\nBest genome:\n{!s}'.format(winner))
         print("Modularity: {:.4f}".format(winner_mod))
 
-        file_stem = "Experiments/layered-connection-cost/trial" + input()
+        file_stem = "trial" 
         node_names = {-(i+1): f"x{i}" for i in range(self.config.genome_config.num_inputs)}
         node_names.update({i: f"y{i}" for i in range(self.config.genome_config.num_outputs)})
         visualize.draw_net(self.config, winner, node_names=node_names, filename=file_stem+".gv")
@@ -111,13 +114,24 @@ def retina_or(args):
     return (float(retina_left(args[:4]) or retina_right(args[4:])),)
 
 if __name__ == "__main__":
+    if len(sys.argv) != 2 or sys.argv[1] not in ["config-mvg", "config-fixedstruct-mvg", \
+                        "config-fixedgoal", "config-fixedstruct-fixedgoal", \
+                        "config-cc"]:
+        print("Usage: python evolve-feedforward.py [config-mvg|config-fixedstruct-mvg|" + \
+              "config-fixedgoal|config-fixedstruct-fixedgoal|config-cc]")
+        quit()
+
     # Determine path to configuration file. This path manipulation is
     # here so that the script will run successfully regardless of the
     # current working directory.
     local_dir = os.path.dirname(__file__)
-    config_path = os.path.join(local_dir, 'config-feedforward')
+    config_path = os.path.join(local_dir, sys.argv[1])
 
-    task = Task(config_path, [retina_and], 10000, 10000)
+    if "fixedgoal" in sys.argv[1] or "cc" in sys.argv[1]:
+        task = Task(config_path, [retina_and], 10000, 10000)
+    elif "mvg" in sys.argv[1]:
+        task = Task(config_path, [retina_and, retina_or], 50, 10000)
+
     task.run()
 
 
