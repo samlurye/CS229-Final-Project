@@ -26,7 +26,7 @@ class Task:
     @staticmethod
     def get_binary_inputs(n_bits):
         tmp = [list(format(i, f"0{n_bits}b")) for i in range(2 ** n_bits)]
-        return [list(map(float, lst)) for lst in tmp] 
+        return [list(map(float, lst)) for lst in tmp]
 
     def eval_genomes(self, genomes, config):
         outputs = self.outputs[self.current_goal]
@@ -64,21 +64,22 @@ class Task:
         print("Modularity: {:.4f}".format(winner_mod))
 
         file_stem = "trial" 
+
         node_names = {-(i+1): f"x{i}" for i in range(self.config.genome_config.num_inputs)}
         node_names.update({i: f"y{i}" for i in range(self.config.genome_config.num_outputs)})
         visualize.draw_net(self.config, winner, node_names=node_names, filename=file_stem+".gv")
 
         save_stats = {
-        	"f_best": np.array([g.fitness for g in stats.most_fit_genomes]),
-        	"f_mean": np.array(stats.get_fitness_mean()),
-        	"f_stddev": np.array(stats.get_fitness_stdev()),
-        	"m_best": np.array(mod.best),
-        	"m_mean": np.array(mod.means),
-        	"m_stddev": np.array(mod.stddevs)
+            "f_best": np.array([g.fitness for g in stats.most_fit_genomes]),
+            "f_mean": np.array(stats.get_fitness_mean()),
+            "f_stddev": np.array(stats.get_fitness_stdev()),
+            "m_best": np.array(mod.best),
+            "m_mean": np.array(mod.means),
+            "m_stddev": np.array(mod.stddevs)
         }
 
         with open(file_stem + ".pkl", "wb") as f:
-        	pickle.dump(save_stats, f, pickle.HIGHEST_PROTOCOL)
+            pickle.dump(save_stats, f, pickle.HIGHEST_PROTOCOL)
 
 
 def xor_or(args):
@@ -133,5 +134,3 @@ if __name__ == "__main__":
         task = Task(config_path, [retina_and, retina_or], 50, 10000)
 
     task.run()
-
-
