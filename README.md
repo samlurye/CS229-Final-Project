@@ -1,8 +1,8 @@
 # cs229-final-project: Exploring the evolution of modularity from scratch in neural networks
 
-### This repository is built on our modified fork of a Python implementation of the NEAT algorithm.
-## Our modified fork: https://github.com/samlurye/neat-python
-## Original: https://github.com/CodeReclaimers/neat-python
+## This repository is built on our modified fork of a Python implementation of the NEAT algorithm.
+### Our modified fork: https://github.com/samlurye/neat-python
+### Original: https://github.com/CodeReclaimers/neat-python
 
 In order to run a trial with MVG and fixed structure, execute
 ```
